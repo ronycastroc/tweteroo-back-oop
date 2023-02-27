@@ -1,3 +1,5 @@
+import { User } from "../models/user-model.js";
+
 export const usuarios = [];
 
 export function signUp (req, res) {
@@ -8,8 +10,13 @@ export function signUp (req, res) {
       res.status(400).send('Todos os campos são obrigatórios!');
       return;
     }
+
+    const user = new User({
+      username,
+      avatar
+    });
   
-    usuarios.push({ username, avatar });
+    usuarios.push(user);
   
     res.status(200).send('OK deu tudo certo');
   } catch (error) {
