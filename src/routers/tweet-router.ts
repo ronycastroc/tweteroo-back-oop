@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import tweetController from '../controllers/tweet-controller.js';
+import tweetController from '../controllers/tweet-controller';
 
 const tweetRouter = Router();
 
