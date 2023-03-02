@@ -1,66 +1,56 @@
-import { usuarios } from "./user-controller.js";
-import { Tweet } from "../models/tweet-model.js";
+import userControllers from './user-controller.js';
 
-const tweets = [];
+class TweetController {
+  constructor() {
+    this.tweets = [];
+    this.create = this.create.bind(this);
+    this.getAll = this.getAll.bind(this);
+    this.getByUser = this.getByUser.bind(this);
+  }
 
-export function postTweet (req, res) {
-  try {
+  create(req, res) {
     const { tweet, username } = req.body;
 
     if (!username || !tweet) {
-      return res.status(400).send('Todos os campos são obrigatórios!');
+      return res.status(400).send('All fields are mandatory!');
     }
 
-    const { avatar } = usuarios.find(user => user.username === username);
+    const { avatar } = userControllers.getLoggedUser(username)[0];
 
-    const newTweet = new Tweet({
-      tweet,
-      username,
-      avatar
-    });
+    this.tweets.push({ username, tweet, avatar });
 
-    tweets.push(newTweet);
-
-    res.status(201).send('OK, seu tweet foi criado');
-  } catch (error) {
-    res.status(500).send('Algo deu errado, tente novamente.');
+    res.status(201).send('OK!');
   }
-}
 
-export function getTweetsUser (req, res) {
-  try {
-    const { username } = req.params;
-
-    const tweetsDoUsuario = tweets.filter(t => t.username === username);
-
-    res.status(200).send(tweetsDoUsuario);
-  } catch (error) {
-    res.status(500).send('Algo deu errado, tente novamente.');
-  }
-}
-
-export function getTweets (req, res) {
-  try {
+  getAll(req, res) {
     const { page } = req.query;
 
     if (page && page < 1) {
-      res.status(400).send('Informe uma página válida!');
+      res.status(400).send('Please enter a valid page!');
       return;
     }
-    const limite = 10;
-    const start = (page - 1) * limite;
-    const end = page * limite;
+    const limit = 10;
+    const start = (page - 1) * limit;
+    const end = page * limit;
 
-    if (tweets.length <= 10) {
-      return res.send(reverseTweets());
+    if (this.tweets.length <= 10) {
+      return res.send(this.reverseTweets());
     }
 
-    res.status(200).send([...tweets].reverse().slice(start, end));
-  } catch (error) {
-    res.status(500).send('Algo deu errado, tente novamente.');
+    res.status(200).send([...this.tweets].reverse().slice(start, end));
+  }
+
+  getByUser(req, res) {
+    const { username } = req.params;
+
+    const tweetsUser = this.tweets.filter(value => value.username === username);
+
+    res.status(200).send(tweetsUser);
+  }
+
+  reverseTweets() {
+    return [...this.tweets].reverse();
   }
 }
 
-function reverseTweets() {
-  return [...tweets].reverse();
-}
+export default new TweetController();

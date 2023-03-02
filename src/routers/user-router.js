@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { signUp } from '../controllers/user-controller.js';
+import userControllers from '../controllers/user-controller.js';
 
-const userRouter = Router();
+const authRouter = Router();
 
-userRouter
-  .post('/sign-up', signUp);
+authRouter
+  .post('/sign-up', userControllers.signUp);
 
-export { userRouter };
+export default authRouter;

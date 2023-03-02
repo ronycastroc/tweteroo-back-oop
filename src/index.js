@@ -1,8 +1,8 @@
 import chalk from 'chalk';
 import cors from 'cors';
 import express, { json } from 'express';
-import { tweetRouter } from './routers/tweet-router.js';
-import { userRouter } from './routers/user-router.js';
+import userRouter from './routers/user-router.js'
+import tweetRouter from './routers/tweet-router.js';
 
 const app = express();
 
@@ -12,6 +12,8 @@ app
   .use(userRouter)
   .use(tweetRouter);
 
-app.listen(5001, () => {
-  console.log(chalk.bold.blue('Servidor funfando de boas!!!'));
+const port = 5001
+
+app.listen(port, () => {
+  console.log(chalk.bold.blue(`Server is listening on port ${port}`));
 });

@@ -1,25 +1,25 @@
-import { User } from "../models/user-model.js";
+class UserController {
+  constructor() {
+    this.users = []
+    this.signUp = this.signUp.bind(this)
+    this.getLoggedUser = this.getLoggedUser.bind(this)
+  }
 
-export const usuarios = [];
-
-export function signUp (req, res) {
-  try {
+  signUp(req, res) {
     const { username, avatar } = req.body;
 
     if (!username || !avatar) {
-      res.status(400).send('Todos os campos são obrigatórios!');
-      return;
+     return res.status(400).send('All fields are mandatory!');     
     }
 
-    const user = new User({
-      username,
-      avatar
-    });
-  
-    usuarios.push(user);
-  
-    res.status(200).send('OK deu tudo certo');
-  } catch (error) {
-    res.status(500).send('Algo deu errado, tente novamente.');
+    this.users.push({ username, avatar });
+
+    res.status(200).send('OK!');
+  }
+
+  getLoggedUser(username) {
+    return this.users.filter(value => value.username === username);
   }
 }
+
+export default new UserController()
